@@ -47,15 +47,15 @@ def get_pet_body(kwargs):
 #     assert response.status_code == 405
 
 
-def test_add_pet_existing_id():
+def test_delete_non_existent_pet():
     pet = get_pet_body({})
     url = 'https://petstore.swagger.io/v2/pet'
     response = requests.post(url, data=pet, headers=add_pet_headers)
     id = conv_bytes_to_json(response.content)['id']
-    new_pet = get_pet_body({'id': id, 'name': 'snowball'})
-    response = requests.post(url, data=new_pet, headers=add_pet_headers)
-    assert response.status_code == 400
+    url = f'https://petstore.swagger.io/v2/pet/{id}'
+    requests.delete(url, headers=delete_pet_headers)
+    response = requests.delete(url, headers=delete_pet_headers)
+    assert response.status_code == 404
 
 
-
-test_add_pet_existing_id()
+test_delete_non_existent_pet()
